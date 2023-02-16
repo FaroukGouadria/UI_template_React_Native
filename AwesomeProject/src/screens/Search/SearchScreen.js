@@ -1,15 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet,Button } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native';
-
+import { View, Text, Button, TouchableOpacity, StyleSheet, FlatList, SafeAreaView } from 'react-native'
+import React,{useState} from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native';
 const SearchScreen = () => {
   const navigation = useNavigation();
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flex: 1, alignItems: 'center' }}>
       <Text style={{ color: 'black', fontSize: 30, marginBottom: 20 }}>Search Screen</Text>
-      <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Product')}>
-        <Text style={styles.txt}>Go to Product Screen</Text>
-      </TouchableOpacity>
       <Button
         title='Go Back'
         color={"gray"}
@@ -34,5 +30,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'gray'
-  }
+  },
+  item: {
+    backgroundColor: '#fff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
 })

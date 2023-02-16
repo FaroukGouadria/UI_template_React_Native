@@ -2,24 +2,32 @@ import { View, Text, Button, TouchableOpacity, StyleSheet, Dimensions } from 're
 import React, { useState, useEffect } from 'react'
 import LinearGradient from 'react-native-linear-gradient';
 import { DATA } from '../../outils/Data';
+import axios from 'axios';
+import { UserCallApi } from '../../Redux/UserReducer';
+import {useDispatch}from 'react-redux'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+const URL = ''
 const ProfileScreen = ({ navigation }) => {
-    console.log(DATA)
+    const dispatch=useDispatch();
+    const callUser = async () =>{
+            const data = await axios.get('https://jsonplaceholder.typicode.com/users/2');
+            console.log({user:data.data});
+            setUser(data.data)
+    };
     const [user, setUser] = useState([]);
     useEffect(() => {
-        setUser(DATA);
-        console.log(user)
-    }, [DATA])
+        // callUser()
+      setUser(dispatch(UserCallApi()))  
+    }, [])
     return (
         <LinearGradient colors={['#645CBB', '#A084DC', '#BFACE2']} style={styles.container}>
             <Text style={{ color: 'black', fontSize: 30, marginBottom: 20 }}>Profile Screen</Text>
-            <Text style={styles.txt}>Name : {user.first_name}</Text>
-            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Setting', { user })}>
+            <Text style={styles.txt}>Name : </Text>
+            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Setting', { user:user })}>
                 <Text style={styles.txt}>Settings</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Payment')}>
+            <TouchableOpacity style={styles.btn} onPress={() => dispatch(UserCallApi())}>
                 <Text style={styles.txt}>Payment</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Position')}>

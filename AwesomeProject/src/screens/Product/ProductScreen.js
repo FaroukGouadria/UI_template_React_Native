@@ -1,10 +1,16 @@
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
-import { useNavigation } from '@react-navigation/native';
-const ProductScreen = () => {
-    const navigation = useNavigation();
+import { View, Text, Button, TouchableOpacity, StyleSheet, FlatList, SafeAreaView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { useRoute } from '@react-navigation/native';
+const ProductScreen = ({navigation}) => {
+    const route=useRoute();
+  const TITRE = ({title}) => (
+    <View style={styles.item}>
+      <Text style={styles.title}>{title}</Text>
+    </View>
+  );
+  const dataa = route.params.title;
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <SafeAreaView style={{ flex: 1,  alignItems: 'center' }}>
             <Text style={{ color: 'black', fontSize: 30, marginBottom: 20 }}>Product Screen</Text>
             <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Search')}>
                 <Text style={styles.txt}>Go to Search Screen</Text>
@@ -15,7 +21,14 @@ const ProductScreen = () => {
                 onPress={() => {
                     navigation.goBack();
                 }} />
-        </View>
+                 <View style={{marginTop:20}}>
+                    <FlatList
+                        data={dataa}
+                        renderItem={({item})=><TITRE title={item.title} />}
+                        keyExtractor={item=>item.id}
+                    />
+               </View>
+        </SafeAreaView>
     )
 }
 
@@ -33,5 +46,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: 'bold',
         color: 'gray'
-    }
+    },
+    item: {
+        backgroundColor: '#fff',
+        padding: 20,
+        marginVertical: 8,
+        marginHorizontal: 16,
+      },
+      title: {
+        fontSize: 32,
+      },
 })
