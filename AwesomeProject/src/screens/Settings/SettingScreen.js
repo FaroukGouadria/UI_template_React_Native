@@ -2,25 +2,25 @@ import { View, Text, StyleSheet,Button ,TouchableOpacity,TextInput} from 'react-
 import React, { useEffect,useState } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import LinearGradient from 'react-native-linear-gradient';
-import { fontSize } from '@mui/system';
 
 const SettingScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  console.log('user',route.params.user)
   const [user,setUser]=useState([]);
   useEffect(()=>{
       setUser(route.params.user);
-      console.log(user)
-  },[user])
+      console.log({userSettings:user});
+  },[user]);
   return (
     <LinearGradient colors={['#EDABE1', '#F7C0B2', '#E0CCAC']} style={styles.container}>
-    <Text style={{ color: 'black', fontSize: 30, margin: 20,alignSelf:'center' }}>Search Screen</Text>
-    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Search')}>
+    <Text style={{ color: 'black', fontSize: 30, margin: 20,alignSelf:'center' }}>Profile Screen</Text>
+    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Home',{screen:'Search'})}>
       <Text style={styles.txt}>Go to  Search </Text>
     </TouchableOpacity>
       <View  style={styles.form} >
       <TextInput
-        style={styles.input}
+        style={styles.input} 
         value={user.name}
       />
         <TextInput
