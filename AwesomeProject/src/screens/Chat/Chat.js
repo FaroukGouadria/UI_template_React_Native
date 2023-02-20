@@ -55,6 +55,8 @@ const Chat = () => {
   const handleUpdate = () => {
     // dispatch(apiUpdatePost({id: post[0].id, title: uptitle, body: upbody}));
     dispatch(updatePosts({id:post[0].id,title:uptitle,body:upbody}))
+    setUpBody('')
+    setUpTitle('')
     // dispatch(setEdit({edit:true,body:body}))
   };
   useEffect(() => {
