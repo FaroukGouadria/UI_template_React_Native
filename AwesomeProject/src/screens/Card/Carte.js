@@ -15,23 +15,23 @@ const getData = ()=>{
   setPost(posts)
 }
 useEffect(()=>{
-  getData(); 
+  getData();  
   console.log({postCart:post});
 },[])  
-  return (
+  return ( 
     <SafeAreaView style={{flex:1}}>
-      <Text style={[styles.title,{margin:20,alignSelf:'center',color:'#f42272',fontSize:30,textAlign:'center'}]}>There are {posts.length} in this Data Base </Text>
+      <Text style={[styles.title,{margin:20,alignSelf:'center',color:'#f42272',fontSize:30,textAlign:'center'}]}>There are {post.length} in this Data Base </Text>
   <ScrollView style={styles.scrollView}> 
-      {posts.map((item,index)=>{
+      {post.map((item,index)=>{
           return(
             <View key={item.id} > 
-        <LinearGradient colors={['#b8b8f3', '#d7b8f3', '#f397d6']} style={styles.container}>
+        <LinearGradient colors={['#b8b8f3', '#d7b8f3', '#f397d6']} style={{margin:20}}>
               <Text style={styles.title}>{item.title}</Text>
               <View style={{flex:1,flexDirection:'row',justifyContent:'space-around'}}>
             <TouchableOpacity style={styles.btn} >
               <Text style={styles.text1}>Update</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn1}  onPress={()=>dispatch(DeleteApi({id:posts[0].id}))}>
+            <TouchableOpacity style={styles.btn1}  onPress={()=>console.log('posts')}>
               <Text style={styles.text2}>Delete</Text>
             </TouchableOpacity>
               </View>
