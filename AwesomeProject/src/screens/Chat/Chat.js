@@ -40,7 +40,6 @@ const Chat = () => {
   const [isEdit, setIsEdit] = useState(false);;
   console.log({post});
   const {title, body} = values;
-  const {upTitle, upBody} = upDateValues;
   const[id,setId]=useState(null)
   const handleSubmit = () => {
     dispatch(createPost({values}));
@@ -57,6 +56,7 @@ const Chat = () => {
     dispatch(updatePosts({id:post[0].id,title:uptitle,body:upbody}))
     setUpBody('')
     setUpTitle('')
+    setIsEdit(false)
     // dispatch(setEdit({edit:true,body:body}))
   };
   useEffect(() => {
