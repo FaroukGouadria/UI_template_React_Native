@@ -1,10 +1,12 @@
 import { View, Text,TouchableOpacity,StyleSheet,Dimensions} from 'react-native'
 import React from 'react'
+// import { Styles as styles } from './StyleBtn';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const Buttons = ({title,onPress}) => {
   return (
-        <TouchableOpacity onPress={()=>onPress()} style={styles.btn} >
+        <TouchableOpacity onPress={onPress} style={styles.btn} >
             <Text style={styles.title}>
                 {title}
             </Text>

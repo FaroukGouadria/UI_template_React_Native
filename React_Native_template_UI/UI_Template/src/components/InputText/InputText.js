@@ -11,7 +11,7 @@ import React, {useState} from 'react';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import Ionicons from 'react-native-vector-icons/dist/Ionicons';
-const InputText = ({fieldName, value, placeHolder, secure, type, onChange}) => {
+const InputText = ({fieldName, value, placeHolder, secure, type, onChange,onBlur,error,...props}) => {
   const [hidePassword, setHidePassword] = useState(secure);
   const togglePasswordVisibility = () => {
     setHidePassword(!hidePassword);
@@ -23,13 +23,15 @@ const InputText = ({fieldName, value, placeHolder, secure, type, onChange}) => {
         <TextInput
           style={styles.input}
           value={value}
-          onChange={() => onChange()}
+          onBlur={onBlur}
           placeholder={placeHolder}
           placeholderTextColor={'#000'}
           secureTextEntry={hidePassword}
           autoCorrect={false}
           textContentType={type}
           onChangeText={() => onChange()}
+          {...props}
+          
         />
         {secure ? (
           <TouchableOpacity onPress={togglePasswordVisibility}>
