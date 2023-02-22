@@ -47,7 +47,7 @@ const Chat = () => {
   const handleSubmit = () => {
     // dispatch(createPost({values}));
     // dispatch(AddPosts({title, body}));
-    dispatch(createPost({title,body,userId:10}))
+    dispatch(createPost({title,body}))
     setTitle('');
     setBody('');
     setShowPost(true);

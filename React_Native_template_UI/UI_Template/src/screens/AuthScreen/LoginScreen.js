@@ -1,7 +1,8 @@
-import {View, Text, StyleSheet,Dimensions} from 'react-native';
+import {View, Text, StyleSheet,Dimensions,TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import TitleText from '../../components/TitleText';
 import InputText from '../../components/InputText';
+import Buttons from '../../components/Buttons';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const LoginScreen = () => {
@@ -29,6 +30,12 @@ const LoginScreen = () => {
           onChange={(password)=>setPassword(password)}
         />
       <Text style={{alignSelf:'flex-end'}}>Recovery Password</Text>
+
+      <Buttons title={'Sign In'} onPress={()=>console.log('pressed')} />
+        <TouchableOpacity style={{flexDirection:'row',justifyContent:'center'}} onPress={()=>console.log(' move to sign up')}>
+      <Text style={{alignSelf:'center',marginTop:100}}>Don't Have An Account ?</Text>
+      <Text style={{alignSelf:'center',marginTop:100 ,color:'#000',fontWeight:'600',textTransform:'capitalize' }}> Sign Up For Free</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

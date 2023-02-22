@@ -1,131 +1,146 @@
-import { View, Text ,FlatList, SafeAreaView, StyleSheet, ScrollView, Button, TouchableOpacity,Alert} from 'react-native'
-import React ,{useState,useEffect} from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { DeleteApi, fetchPostsApi } from '../../Redux/PostsReducers';
+import {
+  View,
+  Text,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  Button,
+  TouchableOpacity,
+  Alert,
+  TextInput,
+} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {DeleteApi, fetchPostsApi} from '../../Redux/PostsReducers';
 import LinearGradient from 'react-native-linear-gradient';
-import { AddPosts, delePosts, deletePost, deletePosts, getPosts, updatePostes, updatePosts } from '../../Redux/ProductReducer';
+import {
+  AddPosts,
+  apiUpdatePost,
+  delePosts,
+  deletePost,
+  deletePosts,
+  getPosts,
+  updatePostes,
+  updatePosts,
+} from '../../Redux/ProductReducer';
 
 const Carte = () => {
+  const dispatch = useDispatch();
+  const [data, setData] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [id, setId] = useState(null);
 
-
-
-const dispatch = useDispatch();
-const postes = useSelector(state => state.PostsReducer.post);
-const [title, setTitle] = useState('');
-const [body, setBody] = useState('');
-const [data, setData] = useState([]);
-const [isEdit, setIsEdit] = useState(false);
-console.log({postes})
-const [id, setId] = useState(null);
   const handleDelete = ({id}) => {
     dispatch(deletePost({id}));
+    dispatch(getPosts());
     Alert.alert('post deleted successfully');
   };
-  const handleUpdate = ({id}) => {
-    // dispatch(apiUpdatePost({id: post[0].id, title: uptitle, body: upbody}));
-    dispatch(updatePostes({id: id, title: title, body: body}));
-    setBody('');
-    setTitle('');
+  const handleUpdate = ({id, title, body}) => {
+    console.log({id, title, body});
+    dispatch(apiUpdatePost({id, title, body}));
     setIsEdit(false);
-    
-    // dispatch(setEdit({edit:true,body:body}))
+    dispatch(getPosts());
   };
-  const dataPost = useSelector(state=>state.PostsReducer.post[0]);
-  console.log({length:dataPost})
-  const getData = ()=>{
-    const data = 
-    setData(data)
-  }
-useEffect(()=>{
-  // dispatch(getPosts());
-},[])  
-const ShowCreatePost = ({id, title, body}) => {
-  return (
-    <View key={id}>
-      <LinearGradient
-        colors={['#b8b8f3', '#d7b8f3', '#f397d6']}
-        style={[styles.container, {margin: 20}]}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.title}>{body}</Text>
-        {isEdit && (
-          <>
-            <View>
-              <TextInput
-                onChangeText={title => setTitle(title)}
-                style={styles.input}
-                placeholder="title"
-                type="text"
-                value={title}
-              />
-              <TextInput
-                value={body}
-                onChangeText={body => setBody(body)}
-                style={styles.input}
-                placeholder="body"
-                type="text"
-              />
-              <TouchableOpacity
-                style={styles.btn2}
-                onPress={() => handleUpdate(id)}>
-                <Text style={styles.text1}>Update</Text>
-              </TouchableOpacity>
-            </View>
-          </>
-        )}
-        <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
+  const dataPost = useSelector(state => state.PostsReducer.post);
+
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
+  const ShowCreatePost = ({id}) => {
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
+    return (
+      <View key={id}>
+        <LinearGradient
+          colors={['#b8b8f3', '#d7b8f3', '#f397d6']}
+          style={[styles.container, {margin: 20}]}>
+          <View>
+            <TextInput
+              onChangeText={title => setTitle(title)}
+              style={styles.input}
+              placeholder="title"
+              type="text"
+              value={title}
+            />
+            <TextInput
+              value={body}
+              onChangeText={body => setBody(body)}
+              style={styles.input}
+              placeholder="body"
+              type="text"
+            />
             <TouchableOpacity
               style={styles.btn2}
-              onPress={() => {setIsEdit(true) ,setId(id)}}>
+              onPress={() => handleUpdate({id, title, body})}>
               <Text style={styles.text1}>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn1}
-              onPress={() => handleDelete(id)}>
-              <Text style={styles.text2}>Delete</Text>
             </TouchableOpacity>
           </View>
-      </LinearGradient>
-    </View>
+        </LinearGradient>
+      </View>
+    );
+  };
+  return (
+    <SafeAreaView style={{flex: 1}}>
+      <Text
+        style={[
+          styles.title,
+          {
+            margin: 20,
+            alignSelf: 'center',
+            color: '#f42272',
+            fontSize: 30,
+            textAlign: 'center',
+          },
+        ]}>
+        There are  {dataPost[0].length}  in this Data Base
+      </Text>
+      {dataPost && (
+        <ScrollView style={styles.scrollView}>
+          {dataPost[0].map((item, index) => {
+            return (
+              <View key={item.id}>
+                <LinearGradient
+                  colors={['#b8b8f3', '#C940D0', '#F4F3EE']}
+                  style={{margin: 20}}>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <Text style={styles.title}>{item.description}</Text>
+                  <Text style={styles.title}>{item.id}</Text>
+                  {isEdit && (
+                    <ShowCreatePost
+                      id={item.id}
+                      title={item.title}
+                      body={item.description}
+                    />
+                  )}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                    }}>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => setIsEdit(true)}>
+                      <Text style={styles.text1}>Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.btn1}
+                      onPress={() => handleDelete({id: item.id})}>
+                      <Text style={styles.text2}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>
+              </View>
+            );
+          })}
+        </ScrollView>
+      )}
+    </SafeAreaView>
   );
 };
-  return ( 
-    <SafeAreaView style={{flex:1}}>
-    
-      <Text style={[styles.title,{margin:20,alignSelf:'center',color:'#f42272',fontSize:30,textAlign:'center'}]}>There are in this Data Base </Text>
-    {data && 
-  <ScrollView style={styles.scrollView}> 
-      {dataPost.map((item,index)=>{
-          return(
-            <View key={item.id} > 
-        <LinearGradient colors={['#b8b8f3', '#d7b8f3', '#f397d6']} style={{margin:20}}>
-              <Text style={styles.title}>{item.title}</Text>
-              <Text style={styles.title}>{item.body}</Text>
-              <Text style={styles.title}>{item.id}</Text>
-              <View style={{flex:1,flexDirection:'row',justifyContent:'space-around'}}>
-            <TouchableOpacity style={styles.btn} onPress={()=>setIsEdit(false) } >
-              <Text style={styles.text1}>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn1}  onPress={()=>handleDelete({id:item.id})}>
-              <Text style={styles.text2}>Delete</Text>
-            </TouchableOpacity>
-              </View>
-        </LinearGradient> 
-              </View>
-          )
-      })}
 
-  </ScrollView>
-    }
-    </SafeAreaView>
-  )
-}
-
-export default Carte
+export default Carte;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -148,7 +163,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 70,
     alignSelf: 'center',
-    borderRadius:5
+    borderRadius: 5,
   },
   btn2: {
     backgroundColor: '#F7F2B2',

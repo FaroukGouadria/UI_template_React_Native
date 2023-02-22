@@ -1,9 +1,9 @@
 {
-    "product":[
-        {
-            "id":1,
-            "name":"phone",
-            "price":12
-        }
-    ]
+  "posts": [
+    {
+      "title": "test 2",
+      "description": "test 2",
+      "id": 2
+    }
+  ]
 }
