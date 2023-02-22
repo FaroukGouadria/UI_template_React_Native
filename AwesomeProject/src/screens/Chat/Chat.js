@@ -15,6 +15,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   addContact,
+  AddPosts,
   apiUpdatePost,
   createPost,
   CreateProduct,
@@ -26,25 +27,31 @@ import {
 } from '../../Redux/ProductReducer';
 
 import LinearGradient from 'react-native-linear-gradient';
+import {FlatList} from 'react-native-gesture-handler';
 
 const Chat = () => {
   const dispatch = useDispatch();
   // const product = useSelector(state=>state.ProductReducer.product);
   const [showPost, setShowPost] = useState(false);
   const [values, setValues] = useState({title: '', body: ''});
-  const [upDateValues,setUpDateValues]=useState({upTitle:'',upBody:''})
-  const [uptitle,setUpTitle]=useState('')
-  const [upbody,setUpBody]=useState('')
-  const post = useSelector(state => state.PostsReducer.post,
-  );
-  const [isEdit, setIsEdit] = useState(false);;
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [upDateValues, setUpDateValues] = useState({upTitle: '', upBody: ''});
+  const [uptitle, setUpTitle] = useState('');
+  const [upbody, setUpBody] = useState('');
+  const post = useSelector(state => state.PostsReducer.post);
+  const [isEdit, setIsEdit] = useState(false);
   console.log({post});
-  const {title, body} = values;
-  const[id,setId]=useState(null)
+  // const {title, body} = values;
+  const [id, setId] = useState(null);
   const handleSubmit = () => {
-    dispatch(createPost({values}));
-    setValues({title: '', body: ''});
+    // dispatch(createPost({values}));
+    // dispatch(AddPosts({title, body}));
+    dispatch(createPost({title,body,userId:10}))
+    setTitle('');
+    setBody('');
     setShowPost(true);
+    Alert.alert('post added successfully');
   };
   const handleDelete = () => {
     dispatch(deletePost({id: post[0].id}));
@@ -53,10 +60,11 @@ const Chat = () => {
   };
   const handleUpdate = () => {
     // dispatch(apiUpdatePost({id: post[0].id, title: uptitle, body: upbody}));
-    dispatch(updatePosts({id:post[0].id,title:uptitle,body:upbody}))
-    setUpBody('')
-    setUpTitle('')
-    setIsEdit(false)
+    dispatch(updatePosts({id: post[0].id, title: uptitle, body: upbody}));
+    setUpBody('');
+    setUpTitle('');
+    setIsEdit(false);
+    
     // dispatch(setEdit({edit:true,body:body}))
   };
   useEffect(() => {
@@ -64,83 +72,40 @@ const Chat = () => {
     //   setTextBody(bodyy);
     // }
   }, []);
-
-  const ShowCreatePost = () => {
-    return (
-      <View key={post[0].id}>
-        <LinearGradient
-          colors={['#b8b8f3', '#d7b8f3', '#f397d6']}
-          style={[styles.container, {margin: 20}]}>
-          <Text style={styles.title}>{post[0].title}</Text>
-          <Text style={styles.title}>{post[0].body}</Text>
-          {isEdit && (
-            <>
-            <View>
-              <TextInput 
-                onChangeText={(title) => setUpTitle(title)}
-                style={styles.input}
-                placeholder="title"
-                type='text'
-                value={uptitle}
-              />  
-              <TextInput
-              value={upbody}
-                onChangeText={(body) => setUpBody(body)} 
-                style={styles.input}
-                placeholder="body"
-                type='text'
-              />
-              <TouchableOpacity
-              style={styles.btn2}
-              onPress={() => handleUpdate()}>
-              <Text style={styles.text1}>Update</Text>
-            </TouchableOpacity>
-            </View>
-            </>
-          )}
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <TouchableOpacity
-              style={styles.btn2}
-              onPress={() => {setIsEdit(true) ,setId(post[0].id)}}>
-              <Text style={styles.text1}>Update</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.btn1}
-              onPress={() => handleDelete()}>
-              <Text style={styles.text2}>Delete</Text>
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-      </View>
-    );
-  };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flex:1,marginBottom:160}}>
-      <TextInput
-        value={title}
-        onChangeText={text => setValues({...values, title: text})}
-        style={styles.input}
-        placeholder="title"
-      />
-      <TextInput
-        value={body}
-        onChangeText={text => setValues({...values, body: text})}
-        style={styles.input}
-        placeholder="body"
-      />
-      <TouchableOpacity style={styles.btn} onPress={() => handleSubmit()}>
-        <Text style={styles.text}> ADD </Text>
-      </TouchableOpacity>
+      <View style={{flex: 1, marginBottom: 160}}>
+        <TextInput
+          value={title}
+          onChangeText={text => setTitle(text)}
+          style={styles.input}
+          placeholder="title"
+        />
+        <TextInput
+          value={body}
+          onChangeText={text => setBody(text)}
+          style={styles.input}
+          placeholder="body"
+        />
+        <TouchableOpacity style={styles.btn} onPress={() => handleSubmit()}>
+          <Text style={styles.text}> ADD </Text>
+        </TouchableOpacity>
       </View>
-      <ScrollView style={styles.scrollView}>
-        {showPost && <ShowCreatePost />}
-      </ScrollView>
+      {/* <SafeAreaView style={styles.scrollView}>
+        {showPost && (
+          <FlatList
+            data={post}
+            renderItem={item => (
+              <ShowCreatePost
+                id={item.id}
+                title={item.title}
+                body={item.body}
+                keyExtractor={item => item.id}
+              />
+            )}
+          />
+        )}
+      </SafeAreaView> */}
     </SafeAreaView>
   );
 };

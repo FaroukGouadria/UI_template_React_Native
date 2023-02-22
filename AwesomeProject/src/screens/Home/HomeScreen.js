@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSelector, useDispatch } from 'react-redux';
 import { ApiCall } from '../../Redux/ApiReducer';
+import { getPosts } from '../../Redux/ProductReducer';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const HomeScreen = ({ navigation }) => {
@@ -11,7 +12,8 @@ const HomeScreen = ({ navigation }) => {
     const data = useSelector(state=>state.ApiReducer.data);
     useEffect(() => {
         dispatch(ApiCall())
-    }, [])
+        dispatch(getPosts());
+    }, [dispatch])
     return (
         <LinearGradient colors={['#4c669f', '#3b5998', '#192f6a']} style={styles.container}>
             <Text style={{ color: 'black', fontSize: 30, marginBottom: 20 }}>HomeScreen</Text>

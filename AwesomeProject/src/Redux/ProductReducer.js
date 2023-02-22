@@ -1,50 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
-import api from '../outils/api';
-import { DATA } from '../outils/Data';
-import { PostSlice } from './PostsReducers';
-
-const initialState = {
-  contacts: [
-    {
-      id: 1,
-      name: "Mayank Kumar",
-      email: "mayankkumar@gmail.com",
-      phone: "+91767656526",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Jitender Kumar",
-      email: "jitenderskumar@gmail.com",
-      phone: "+918878446746",
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      name: "James Gun",
-      email: "jamesgun@gmail.com",
-      phone: "+919768446746",
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "James Bond",
-      email: "jamesbind@gmail.com",
-      phone: "+917768446746",
-      status: "Inactive",
-    },
-  ],
-  filter:'All',
-  contact:{
-    name:"",
-    email:"",
-    phone:"",
-    status:""
-  },
-  loader: false,
-  error: '',
-};
+import uuid from 'react-native-uuid';
 
 
 // export const fetchProduct = createAsyncThunk('product/fetchProduct',async()=>{
@@ -75,6 +31,16 @@ export const getPost = createAsyncThunk("post/getPost", async ({ id }) => {
     res.json()
   );
 });
+export const getPosts = createAsyncThunk("post/getPosts", async () => {
+  const response =await axios.get(`https://jsonplaceholder.typicode.com/posts`);
+      if(response){
+        console.log(response.data)
+        return response.data
+      }else
+      {
+        return response.data.error
+      }
+});
 export const deletePost = createAsyncThunk(
   "post/deletePost",
   async ({ id }) => {
@@ -85,7 +51,7 @@ export const deletePost = createAsyncThunk(
 );
 export const createPost = createAsyncThunk(
   "post/createPost",
-  async ({ values }) => {
+  async ({ title,body,userId }) => {
     return fetch(`https://jsonplaceholder.typicode.com/posts`, {
       method: "POST",
       headers: {
@@ -93,29 +59,19 @@ export const createPost = createAsyncThunk(
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        title: values.title,
-        body: values.body,
+        title: title,
+        body: body,
+        userId:userId
       }),
     }).then((res) => res.json());
   }
 );
 export const apiUpdatePost = createAsyncThunk(
   "post/updatePost",
-  async ({ id, title, body }) => {
+  async ({ id, title, body },) => {
     console.log({id})
     console.log({body})
     console.log({title})
-    // const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     title,
-    //     body,
-    //   }),
-    // });
     const response = await axios.post(`https://jsonplaceholder.typicode.com/posts/${id}`,{id:id,title:title,body:body});
     console.log(response.data)
     const data = await response.json();
@@ -123,6 +79,7 @@ export const apiUpdatePost = createAsyncThunk(
     return data;
   }
 );
+
 const PostsSlice = createSlice({
   name: "post",
   initialState: {
@@ -132,6 +89,10 @@ const PostsSlice = createSlice({
 
   },
   reducers: {
+    AddPosts:function(state,action){
+      const {title,body}=action.payload
+      state.post.push({id:uuid.v4(),title,body})
+    },
     updatePosts:function(state,action){
         state.post.map(post=>{
           if(post.id==action.payload.id){
@@ -139,6 +100,21 @@ const PostsSlice = createSlice({
             post.body = action.payload.body
           }
         })
+    },
+    deletePosts: (state, action) => {
+      const postId = action.payload;
+      console.log({postId})
+      state.post = state.post.filter(post => post.id !== postId);
+    },
+    updatePostes:function(state,action){
+      state.post.map(item=>{
+        console.log(item.id)
+        console.log(action.payload.id)
+        if(item.id==action.payload.id){
+          item.title = action.payload.title;
+          item.body=action.payload.body
+        }
+      })
     }
   },
   extraReducers:(builder)=> {
@@ -151,6 +127,17 @@ const PostsSlice = createSlice({
       state.post = [action.payload];
     })
     .addCase(getPost.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    })
+    .addCase(getPosts.pending, (state, action) => {
+      state.loading = true;
+    })
+    .addCase(getPosts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.post = [action.payload];
+    })
+    .addCase(getPosts.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     })
@@ -170,7 +157,7 @@ const PostsSlice = createSlice({
     })
     .addCase(createPost.fulfilled, (state, action) => {
       state.loading = false;
-      state.post = [action.payload];
+      state.post = [action.payload]
     })
     .addCase(createPost.rejected, (state, action) => {
       state.loading = false;
@@ -196,8 +183,31 @@ const PostsSlice = createSlice({
     })
   },
 });
-export const{updatePosts}=PostsSlice.actions;
+export const{updatePosts,AddPosts,deletePosts,updatePostes}=PostsSlice.actions;
 export default PostsSlice.reducer;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // export const ProductSlice = createSlice({
 //     name: 'contact',
 //     initialState,
